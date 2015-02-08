@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+</head>
+
+<body>
+
+<div data-role="header">
+    <h1>Random Student</h1>
+    <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+    <a href="#" onclick ="retrieveFromLocalStorage()" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Load Data</a>
+  
+</div>
+    
+<div class = "ui-content" role ="main">
+
+<button onclick="controller.createNewClass();">Add New Class</button>
+
+<label for="select-choice-a" class="select"></label>
+
+<select id="classPeriodSelector">Choose a Class</select>
+
+<button onclick="controller.deleteThisClass();">Delete this Class</button>
+
+<button onclick="controller.randomGenerator();">Choose a Student at Random</button>
+
+
+<list id = "calledStudentList">
+  
+</list>
+
+<p id="chosenStudentName"></p>
+  
+</div>
+
+
+<script>
+
+//class constructor for classPeriod
+
+//var calledStudentList = document.getElementById('calledStudentList'); //broken
+var selector = document.getElementById('classPeriodSelector');
+var classPeriod = function(students,className,numberOfStudents) {
+  this.students=students;
+  this.className=className;
+  this.numberOfStudents=numberOfStudents;
+  
+}
+
+var retrieveFromLocalStorage=function() {
+    var myOldData = JSON.parse(localStorage.getItem("myData"));
+    data.classArray.push(myOldData); //pulling out an array of objects!
+    console.log(myOldData);
+    console.log(data.classArray);
+    view.renderClassChooserBox();
+}
+
+var saveToLocalStorage= function(classArray) { //okay this works!
+    var savedData = data.classArray;
+    for (var i in savedData)
+    localStorage.setItem("myData",JSON.stringify(savedData[i]));
+    console.log(localStorage.getItem("myData")); //saving an array of objects!!!
+  }
+  
+//data model
+var data = {
+  classArray : [],
+};
+
+//octopus or controller
+var controller = {
+    createNewClass : function() {
+      var name = prompt("What is the name of this class?");
+      var number = prompt("How many students in your class? (enter numeric answer)");
+       var students = [];
+       for (i=0;i<number;i++) {
+          var newStudent=prompt("What is the name of student "+(i+1)+"?");
+          students.push(newStudent);
+       }
+      
+      var newClassPeriod = new classPeriod(students,name,number);
+      data.classArray.push(newClassPeriod);
+      console.log(data.classArray);
+      view.renderClassChooserBox();
+      saveToLocalStorage();
+    },
+    
+    deleteThisClass: function(selectedClassPeriod) {
+      var selectedClassPeriod = data.classArray[selector.selectedIndex];
+      
+      delete selectedClassPeriod;
+
+    },
+      
+    randomGenerator : function() {
+      var selectedClassPeriod = data.classArray[selector.selectedIndex];
+      //console.log(selectedClassPeriod);
+      var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
+      var chosenStudent=selectedClassPeriod.students[randomIndex];
+        //return chosenStudent;
+      view.displayChosenStudent(chosenStudent);
+      }
+};
+
+//view
+
+var view = {
+  
+    displayChosenStudent: function(chosenStudent) {
+      //alert("The student is"+" "+chosenStudent+".");
+      /*var calledOn = document.createElement('ol');
+      calledOn.value=chosenStudent; //this stuff doesn't work right now
+      calledOn.innerHTML=chosenStudent;
+      calledStudentList.add(calledOn);*/
+      
+      document.getElementById("chosenStudentName").innerHTML = chosenStudent;
+    },
+  
+    renderClassChooserBox: function() {
+      //var selectionBox=document.createElement('select');
+      var renderedData = data.classArray;
+      for (var i in renderedData) {
+          var opt = document.createElement('option');
+          opt.value=renderedData[i].className;
+          opt.innerHTML = renderedData[i].className;
+          selector.add(opt);
+      }
+     
+    }
+}
+
+//retrieveFromLocalStorage();
+
+</script>
+
+</body>
+
+</html>
