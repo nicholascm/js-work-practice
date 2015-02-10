@@ -24,7 +24,7 @@ ccfdsfd
     
 <div class = "ui-content" role ="main">
 
-<button onclick="controller.createNewClass();">Add New Class</button>
+<button onclick="classviewModel().createNewClass();">Add New Class</button>
 
 <label for="select-choice-a" class="select"></label>
 
@@ -46,16 +46,6 @@ ccfdsfd
 
 <script>
 
-//class constructor for each classPeriod
-
-var classPeriod = function(students,className,numberOfStudents) {
-  var self = this; 
-  self.students=ko.observableArray();
-  self.className=className;
-  self.numberOfStudents=numberOfStudents;
-  
-}
-
 //these two functions below are for local storage management, though they will only store/retrieve a single class. 
 
 /*
@@ -74,8 +64,15 @@ var saveToLocalStorage= function(classArray) { //okay this works!
     console.log(localStorage.getItem("myData")); //saving an array of objects!!!
   }
 */
+//class constructor for each classPeriod
 
-
+var classPeriod = function(students,className,numberOfStudents) {
+  var self = this; 
+  self.students=ko.observableArray();
+  self.className=className;
+  self.numberOfStudents=numberOfStudents;
+  
+}
 //viewmodel
 
 function classviewModel() = {
@@ -93,20 +90,22 @@ function classviewModel() = {
         for (i=0;i<number;i++) {
           var newStudent=prompt("What is the name of student "+(i+1)+"?");
           students.push(newStudent);
-        }
+        },
       
         var newClassPeriod = new classPeriod(students,name,number);
           self.classArray.push(newClassPeriod);
           console.log(classArray);
-    },
+        },
     
     self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
         var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
         var chosenStudent=selectedClassPeriod.students[randomIndex];
       }
-};
 
+    };
+
+ko.applyBindings(new classviewModel());
 
 </script>
 
