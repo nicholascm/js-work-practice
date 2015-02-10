@@ -8,14 +8,16 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script src="knockout.js"> 
 
 </head>
 
 <body>
-
+ccfdsfd
 <div data-role="header">
     <h1>Random Student</h1>
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
+    
     <a href="#" onclick ="retrieveFromLocalStorage()" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Load Data</a>
   
 </div>
@@ -26,11 +28,11 @@
 
 <label for="select-choice-a" class="select"></label>
 
-<select id="classPeriodSelector">Choose a Class</select>
+<select data-bind="foreach: classArray">Choose a Class</select>
+  <option data-bind="text:classname"></option>
 
-<button onclick="controller.deleteThisClass();">Delete this Class</button>
 
-<button onclick="controller.randomGenerator();">Choose a Student at Random</button>
+<button onclick="classViewModel().randomGenerator();">Choose a Student at Random</button>
 
 
 <list id = "calledStudentList">
@@ -44,24 +46,26 @@
 
 <script>
 
-//class constructor for classPeriod
+//class constructor for each classPeriod
 
-//var calledStudentList = document.getElementById('calledStudentList'); //broken
-var selector = document.getElementById('classPeriodSelector');
 var classPeriod = function(students,className,numberOfStudents) {
-  this.students=students;
-  this.className=className;
-  this.numberOfStudents=numberOfStudents;
+  var self = this; 
+  self.students=ko.observableArray();
+  self.className=className;
+  self.numberOfStudents=numberOfStudents;
   
 }
 
-var retrieveFromLocalStorage=function() {
+//these two functions below are for local storage management, though they will only store/retrieve a single class. 
+
+/*
+var retrieveFromLocalStorage = function() {
     var myOldData = JSON.parse(localStorage.getItem("myData"));
     data.classArray.push(myOldData); //pulling out an array of objects!
     console.log(myOldData);
     console.log(data.classArray);
     view.renderClassChooserBox();
-}
+  } 
 
 var saveToLocalStorage= function(classArray) { //okay this works!
     var savedData = data.classArray;
@@ -69,75 +73,40 @@ var saveToLocalStorage= function(classArray) { //okay this works!
     localStorage.setItem("myData",JSON.stringify(savedData[i]));
     console.log(localStorage.getItem("myData")); //saving an array of objects!!!
   }
-  
-//data model
-var data = {
-  classArray : [],
-};
+*/
 
-//octopus or controller
-var controller = {
-    createNewClass : function() {
-      var name = prompt("What is the name of this class?");
-      var number = prompt("How many students in your class? (enter numeric answer)");
-       var students = [];
-       for (i=0;i<number;i++) {
+
+//viewmodel
+
+function classviewModel() = {
+  
+  var self = this; 
+
+  self.classArray = ko.observableArray([new classPeriod(["John","Nicholas","Cassie"],"First Period",3)]); 
+
+  self.calledstudents=ko.observableArray(); 
+    
+    self.createNewClass = function() {
+        var name = prompt("What is the name of this class?");
+        var number = prompt("How many students in your class? (enter numeric answer)");
+        var students = [];
+        for (i=0;i<number;i++) {
           var newStudent=prompt("What is the name of student "+(i+1)+"?");
           students.push(newStudent);
-       }
+        }
       
-      var newClassPeriod = new classPeriod(students,name,number);
-      data.classArray.push(newClassPeriod);
-      console.log(data.classArray);
-      view.renderClassChooserBox();
-      saveToLocalStorage();
+        var newClassPeriod = new classPeriod(students,name,number);
+          self.classArray.push(newClassPeriod);
+          console.log(classArray);
     },
     
-    deleteThisClass: function(selectedClassPeriod) {
-      var selectedClassPeriod = data.classArray[selector.selectedIndex];
-      
-      delete selectedClassPeriod;
-
-    },
-      
-    randomGenerator : function() {
-      var selectedClassPeriod = data.classArray[selector.selectedIndex];
-      //console.log(selectedClassPeriod);
-      var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
-      var chosenStudent=selectedClassPeriod.students[randomIndex];
-        //return chosenStudent;
-      view.displayChosenStudent(chosenStudent);
+    self.randomGenerator = ko.computed(function() {
+        var selectedClassPeriod = data.classArray[selector.selectedIndex];
+        var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
+        var chosenStudent=selectedClassPeriod.students[randomIndex];
       }
 };
 
-//view
-
-var view = {
-  
-    displayChosenStudent: function(chosenStudent) {
-      //alert("The student is"+" "+chosenStudent+".");
-      /*var calledOn = document.createElement('ol');
-      calledOn.value=chosenStudent; //this stuff doesn't work right now
-      calledOn.innerHTML=chosenStudent;
-      calledStudentList.add(calledOn);*/
-      
-      document.getElementById("chosenStudentName").innerHTML = chosenStudent;
-    },
-  
-    renderClassChooserBox: function() {
-      //var selectionBox=document.createElement('select');
-      var renderedData = data.classArray;
-      for (var i in renderedData) {
-          var opt = document.createElement('option');
-          opt.value=renderedData[i].className;
-          opt.innerHTML = renderedData[i].className;
-          selector.add(opt);
-      }
-     
-    }
-}
-//this is a change and added comment
-//retrieveFromLocalStorage();
 
 </script>
 
