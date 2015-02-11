@@ -8,31 +8,30 @@
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-<script src="knockout.js"> 
+<script src="http://cdnjs.cloudflare.com/ajax/libs/knockout/3.1.0/knockout-min.js"></script>
 
 </head>
 
 <body>
-ccfdsfd
+
 <div data-role="header">
     <h1>Random Student</h1>
+   
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
     
-    <a href="#" onclick ="retrieveFromLocalStorage()" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Load Data</a>
+   <!-- <a href="#" onclick ="retrieveFromLocalStorage()" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Load</a> -->
   
 </div>
     
 <div class = "ui-content" role ="main">
 
-<button onclick="classviewModel().createNewClass();">Add New Class</button>
-
-<label for="select-choice-a" class="select"></label>
+<button data-bind = "click: createNewClass">Add New Class</button>
 
 <select data-bind="foreach: classArray">Choose a Class</select>
-  <option data-bind="text:classname"></option>
+    <option data-bind="text: className"></option>
 
 
-<button onclick="classViewModel().randomGenerator();">Choose a Student at Random</button>
+<!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
 
 
 <list id = "calledStudentList">
@@ -64,18 +63,21 @@ var saveToLocalStorage= function(classArray) { //okay this works!
     console.log(localStorage.getItem("myData")); //saving an array of objects!!!
   }
 */
+
 //class constructor for each classPeriod
 
-var classPeriod = function(students,className,numberOfStudents) {
+function classPeriod(students,className,numberOfStudents) {
   var self = this; 
   self.students=ko.observableArray();
-  self.className=className;
+  self.className=ko.observable();
   self.numberOfStudents=numberOfStudents;
   
 }
-//viewmodel
 
-function classviewModel() = {
+//viewmodel
+//[new classPeriod(["John","Nicholas","Cassie"],"First Period",3)]
+
+function classViewModel() {
   
   var self = this; 
 
@@ -90,22 +92,22 @@ function classviewModel() = {
         for (i=0;i<number;i++) {
           var newStudent=prompt("What is the name of student "+(i+1)+"?");
           students.push(newStudent);
-        },
+        }
       
         var newClassPeriod = new classPeriod(students,name,number);
           self.classArray.push(newClassPeriod);
-          console.log(classArray);
-        },
+          console.log(self.classArray);
+        };
     
-    self.randomGenerator = ko.computed(function() {
+    /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
         var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
         var chosenStudent=selectedClassPeriod.students[randomIndex];
-      }
+      }); */
 
-    };
+}
 
-ko.applyBindings(new classviewModel());
+ko.applyBindings(new classViewModel());
 
 </script>
 
