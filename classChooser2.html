@@ -27,9 +27,9 @@
 
 <button data-bind = "click: createNewClass">Add New Class</button>
 
-<select data-bind="foreach: classArray">Choose a Class</select>
-    <option data-bind="text: className"></option>
-
+<select data-bind="foreach: classArray">
+    <option data-bind="value: classArray().className"></option>
+</select>
 
 <!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
 
@@ -81,7 +81,7 @@ function classViewModel() {
   
   var self = this; 
 
-  self.classArray = ko.observableArray([new classPeriod(["John","Nicholas","Cassie"],"First Period",3)]); 
+  self.classArray = ko.observableArray(); 
 
   self.calledstudents=ko.observableArray(); 
     
@@ -95,7 +95,7 @@ function classViewModel() {
         }
       
         var newClassPeriod = new classPeriod(students,name,number);
-          self.classArray.push(newClassPeriod);
+          self.classArray.push(newClassPeriod.className);
           console.log(self.classArray);
         };
     
