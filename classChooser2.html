@@ -37,7 +37,9 @@
     <button type="submit" data-bind="enable: classToAdd().length > 0">Add</button>
 </form>
  <p>Your classes:</p>
-    <select width="50" data-bind="options: allClasses"> </select>
+  <ul data-bind="foreach:allClasses">
+      <li width="50" data-bind="text: className"> </li>
+  </ul> 
 
 <!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
 
@@ -75,8 +77,10 @@ var saveToLocalStorage= function(classArray) { //okay this works!
 //class constructor for each classPeriod
 
 var classPeriod = function(students,className) {
+  
   this.students=ko.observableArray(students);
   this.className=className;
+  
   this.addStudent = function() {
       this.students.push(nameOfStudent)
   
@@ -108,8 +112,9 @@ function classViewModel() {
     
     self.addClass = function() {
         if ((self.classToAdd() != "") && (self.allClasses.indexOf(self.classToAdd()) < 0)) // Prevent blanks and duplicates
-            self.allClasses.push(this.classToAdd());
+            self.allClasses.push(new classPeriod("",self.classToAdd));
             self.classToAdd(""); // Clear the text box
+            console.log(self.allClasses()); 
     }
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
