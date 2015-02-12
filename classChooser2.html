@@ -27,9 +27,17 @@
 
 <button data-bind = "click: createNewClass">Add New Class</button>
 
-<select data-bind="foreach: classArray">
-    <option data-bind="value: classArray().className"></option>
+<select data-bind="options: classArray">
+    <option data-bind="text: classArray().className"></option>
 </select>
+
+<h3>Setup your classes</h3>
+<form data-bind="submit:addClass">
+    Add a New Class: <input type="text" data-bind='value:classToAdd, valueUpdate: "afterkeydown"' />
+    <button type="submit" data-bind="enable: classToAdd().length > 0">Add</button>
+</form>
+ <p>Your classes:</p>
+    <select width="50" data-bind="options: allClasses"> </select>
 
 <!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
 
@@ -66,26 +74,27 @@ var saveToLocalStorage= function(classArray) { //okay this works!
 
 //class constructor for each classPeriod
 
-function classPeriod(students,className,numberOfStudents) {
-  var self = this; 
-  self.students=ko.observableArray();
-  self.className=ko.observable();
-  self.numberOfStudents=numberOfStudents;
+var classPeriod = function(students,className) {
+  this.students=ko.observableArray(students);
+  this.className=className;
+  this.addStudent = function() {
+      this.students.push(nameOfStudent)
+  
+  }.bind(this);
   
 }
 
 //viewmodel
-//[new classPeriod(["John","Nicholas","Cassie"],"First Period",3)]
 
 function classViewModel() {
   
   var self = this; 
-
+  self.classToAdd=ko.observable(""); 
   self.classArray = ko.observableArray(); 
-
+  self.allClasses=ko.observableArray(); 
   self.calledstudents=ko.observableArray(); 
     
-    self.createNewClass = function() {
+  self.createNewClass = function() {
         var name = prompt("What is the name of this class?");
         var number = prompt("How many students in your class? (enter numeric answer)");
         var students = [];
@@ -93,12 +102,15 @@ function classViewModel() {
           var newStudent=prompt("What is the name of student "+(i+1)+"?");
           students.push(newStudent);
         }
-      
-        var newClassPeriod = new classPeriod(students,name,number);
-          self.classArray.push(newClassPeriod.className);
-          console.log(self.classArray);
+          self.classArray().push(new classPeriod(students,name,number));
+          console.log(self.classArray());
         };
     
+    self.addClass = function() {
+        if ((self.classToAdd() != "") && (self.allClasses.indexOf(self.classToAdd()) < 0)) // Prevent blanks and duplicates
+            self.allClasses.push(this.classToAdd());
+            self.classToAdd(""); // Clear the text box
+    }
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
         var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
