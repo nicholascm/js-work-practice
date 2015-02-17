@@ -25,21 +25,21 @@
     
 <div class = "ui-content" role ="main">
 
-<button data-bind = "click: createNewClass">Add New Class</button>
-
-<select data-bind="options: classArray">
-    <option data-bind="text: classArray().className"></option>
-</select>
 
 <h3>Setup your classes</h3>
-<form data-bind="submit:addClass">
-    Add a New Class: <input type="text" data-bind='value:classToAdd, valueUpdate: "afterkeydown"' />
-    <button type="submit" data-bind="enable: classToAdd().length > 0">Add</button>
-</form>
- <p>Your classes:</p>
-  <ul data-bind="foreach:allClasses">
-      <li width="50" data-bind="text: className"> </li>
-  </ul> 
+    <ul data-bind="foreach: allClasses">
+        <li>
+            <div>
+                <span data-bind="text: className"> </span>
+                <a href='#' data-bind='click: addStudent '>Add child</a>
+            </div>
+            <ul data-bind="foreach: students">
+                <li>
+                    <span data-bind="text: $data"> </span>
+                </li>
+            </ul>
+        </li>
+    </ul>
 
 <!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
 
@@ -55,7 +55,7 @@
 
 <script>
 
-//these two functions below are for local storage management, though they will only store/retrieve a single class. 
+//these two functions below are for local storage management, though they will only store/retrieve a single class.
 
 /*
 var retrieveFromLocalStorage = function() {
@@ -64,7 +64,7 @@ var retrieveFromLocalStorage = function() {
     console.log(myOldData);
     console.log(data.classArray);
     view.renderClassChooserBox();
-  } 
+  }
 
 var saveToLocalStorage= function(classArray) { //okay this works!
     var savedData = data.classArray;
@@ -82,7 +82,7 @@ var classPeriod = function(students,className) {
   this.className=className;
   
   this.addStudent = function() {
-      this.students.push(nameOfStudent)
+      this.students.push("New Student");
   
   }.bind(this);
   
@@ -90,41 +90,30 @@ var classPeriod = function(students,className) {
 
 //viewmodel
 
-function classViewModel() {
+var classViewModel = {
   
-  var self = this; 
-  self.classToAdd=ko.observable(""); 
-  self.classArray = ko.observableArray(); 
-  self.allClasses=ko.observableArray(); 
-  self.calledstudents=ko.observableArray(); 
-    
-  self.createNewClass = function() {
-        var name = prompt("What is the name of this class?");
-        var number = prompt("How many students in your class? (enter numeric answer)");
-        var students = [];
-        for (i=0;i<number;i++) {
-          var newStudent=prompt("What is the name of student "+(i+1)+"?");
-          students.push(newStudent);
-        }
-          self.classArray().push(new classPeriod(students,name,number));
-          console.log(self.classArray());
-        };
-    
-    self.addClass = function() {
+  /*classToAdd: ko.observable(""),
+  classArray : ko.observableArray(),
+  calledstudents: ko.observableArray(),
+  
+  addClass : function() {
         if ((self.classToAdd() != "") && (self.allClasses.indexOf(self.classToAdd()) < 0)) // Prevent blanks and duplicates
             self.allClasses.push(new classPeriod("",self.classToAdd));
             self.classToAdd(""); // Clear the text box
-            console.log(self.allClasses()); 
-    }
+            console.log(self.allClasses());
+    },
+  */
+  allClasses : [new classPeriod(["nick","John","alex"],"first period"), new classPeriod(["nick","John","alex"],"second period")]
+
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
         var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
         var chosenStudent=selectedClassPeriod.students[randomIndex];
       }); */
+    
+};
 
-}
-
-ko.applyBindings(new classViewModel());
+ko.applyBindings(classViewModel);
 
 </script>
 
