@@ -95,15 +95,15 @@ var classViewModel = {
   /*classToAdd: ko.observable(""),
   classArray : ko.observableArray(),
   calledstudents: ko.observableArray(),
-  
-  addClass : function() {
-        if ((self.classToAdd() != "") && (self.allClasses.indexOf(self.classToAdd()) < 0)) // Prevent blanks and duplicates
-            self.allClasses.push(new classPeriod("",self.classToAdd));
-            self.classToAdd(""); // Clear the text box
-            console.log(self.allClasses());
-    },
   */
-  allClasses : [new classPeriod(["nick","John","alex"],"first period"), new classPeriod(["nick","John","alex"],"second period")]
+  addClass : function(classToAdd) {
+        /*if ((classToAdd() != "") && (allClasses.indexOf(classToAdd) < 0)) // Prevent blanks and duplicates*/
+            classViewModel.allClasses.push(new classPeriod("",classToAdd));
+            //classToAdd(""); // Clear the text box
+            console.log(classViewModel.allClasses);
+    },
+  
+  allClasses : [new classPeriod(["nick","John","alex"],"first period"), new classPeriod(["nick","John","alex"],"second period"),new classPeriod(["nick","John","alex"],"first period")]
 
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
@@ -114,7 +114,7 @@ var classViewModel = {
 };
 
 ko.applyBindings(classViewModel);
-
+classViewModel.addClass("Third Period");
 </script>
 
 </body>
