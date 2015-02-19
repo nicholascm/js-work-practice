@@ -27,11 +27,15 @@
 
 
 <h3>Setup your classes</h3>
+<a href="#" data-bind='click:addClass'>Add a Class</a> <p><input data-bind="value: classToAdd" /></p>
     <ul data-bind="foreach: allClasses">
         <li>
             <div>
-                <span data-bind="text: className"> </span>
-                <a href='#' data-bind='click: addStudent '>Add child</a>
+              <span data-bind="text: className"> </span>
+              <!-- <input data-bind="value:studentToAdd"></input> -->
+              <a href='#' data-bind='click: addStudent'>Add Student</a>
+              <p>Students Name to Add: <input data-bind="value: studentToAdd" /></p>
+
             </div>
             <ul data-bind="foreach: students">
                 <li>
@@ -80,9 +84,10 @@ var classPeriod = function(students,className) {
   
   this.students=ko.observableArray(students);
   this.className=className;
+  this.studentToAdd="";
   
   this.addStudent = function() {
-      this.students.push("New Student");
+      this.students.push(this.studentToAdd);
   
   }.bind(this);
   
@@ -91,6 +96,8 @@ var classPeriod = function(students,className) {
 //viewmodel
 
 var classViewModel = {
+  
+  classToAdd: "",
   
   /*classToAdd: ko.observable(""),
   classArray : ko.observableArray(),
@@ -103,7 +110,7 @@ var classViewModel = {
             console.log(classViewModel.allClasses);
     },
   
-  allClasses : [new classPeriod(["nick","John","alex"],"first period"), new classPeriod(["nick","John","alex"],"second period"),new classPeriod(["nick","John","alex"],"first period")]
+  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")])
 
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
@@ -114,7 +121,6 @@ var classViewModel = {
 };
 
 ko.applyBindings(classViewModel);
-classViewModel.addClass("Third Period");
 </script>
 
 </body>
