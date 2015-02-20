@@ -23,19 +23,25 @@
   
 </div>
     
+
 <div class = "ui-content" role ="main">
 
 
-<h3>Setup your classes</h3>
-<a href="#" data-bind='click:addClass'>Add a Class</a> <p><input data-bind="value: classToAdd" /></p>
-    <ul data-bind="foreach: allClasses">
+<h1>Classroom Setup</h1>
+<label><input data-bind='checked: showClasses' type='checkbox' /> Show my classes and students for editing</label>
+
+<button type = "submit" data-bind='click:addClass,  visible: $root.showClasses'>Add a Class</button> <p><input type="text" placeholder="Class Name" data-bind="value: classToAdd.value,  visible: $root.showClasses" /></p>
+    <ul data-bind="foreach: allClasses, visible: $root.showClasses">
         <li>
             <div>
-              <span data-bind="text: className"> </span>
+            <div>
+              <h2><span data-bind="text: className"> </span></h2>
+            </div>
+            <div>
+      <button type="submit" data-bind="click: addStudent">Add Student</button>
+      <p><input type="text" placeholder="Student Name" data-bind="value: studentToAdd"></p>
+             </div>
               <!-- <input data-bind="value:studentToAdd"></input> -->
-              <a href='#' data-bind='click: addStudent'>Add Student</a>
-              <p>Students Name to Add: <input data-bind="value: studentToAdd" /></p>
-
             </div>
             <ul data-bind="foreach: students">
                 <li>
@@ -44,18 +50,8 @@
             </ul>
         </li>
     </ul>
-
-<!--<button data-bind="click: randomGenerator">Choose a Student at Random</button> -->
-
-
-<list id = "calledStudentList">
-  
-</list>
-
-<p id="chosenStudentName"></p>
-  
+    
 </div>
-
 
 <script>
 
@@ -88,7 +84,7 @@ var classPeriod = function(students,className) {
   
   this.addStudent = function() {
       this.students.push(this.studentToAdd);
-  
+
   }.bind(this);
   
 }
@@ -99,10 +95,6 @@ var classViewModel = {
   
   classToAdd: "",
   
-  /*classToAdd: ko.observable(""),
-  classArray : ko.observableArray(),
-  calledstudents: ko.observableArray(),
-  */
   addClass : function(classToAdd) {
         /*if ((classToAdd() != "") && (allClasses.indexOf(classToAdd) < 0)) // Prevent blanks and duplicates*/
             classViewModel.allClasses.push(new classPeriod("",classToAdd));
@@ -110,17 +102,19 @@ var classViewModel = {
             console.log(classViewModel.allClasses);
     },
   
-  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")])
+  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")]),
+  
+  showClasses: ko.observable()
 
     /*self.randomGenerator = ko.computed(function() {
         var selectedClassPeriod = data.classArray[selector.selectedIndex];
         var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
         var chosenStudent=selectedClassPeriod.students[randomIndex];
       }); */
-    
 };
 
 ko.applyBindings(classViewModel);
+
 </script>
 
 </body>
