@@ -28,18 +28,18 @@
 
 
 <h1>Classroom Setup</h1>
-<label><input data-bind='checked: showClasses' type='checkbox' /> Show my classes and students for editing</label>
+<label><input data-bind='checked: showClasses' type='checkbox' /> Edit my classes and students</label>
 
-<button type = "submit" data-bind='click:addClass,  visible: $root.showClasses'>Add a Class</button> <p><input type="text" placeholder="Class Name" data-bind="value: classToAdd.value,  visible: $root.showClasses" /></p>
-    <ul data-bind="foreach: allClasses, visible: $root.showClasses">
+<button type = "submit" data-bind='click:addClass,  visible: $root.showClasses'>Add a Class</button> <p><input type="text" placeholder="Class Name" data-bind="value: classToAdd,  visible: $root.showClasses" /></p>
+    <ul data-bind="foreach: allClasses">
         <li>
             <div>
             <div>
               <h2><span data-bind="text: className"> </span></h2>
             </div>
             <div>
-      <button type="submit" data-bind="click: addStudent">Add Student</button>
-      <p><input type="text" placeholder="Student Name" data-bind="value: studentToAdd"></p>
+      <button type="submit" data-bind="click: addStudent, visible: $root.showClasses">Add Student</button>
+      <p><input type="text" placeholder="Student Name" data-bind="value: studentToAdd, visible: $root.showClasses"></p>
              </div>
               <!-- <input data-bind="value:studentToAdd"></input> -->
             </div>
@@ -95,14 +95,14 @@ var classViewModel = {
   
   classToAdd: "",
   
-  addClass : function(classToAdd) {
+  addClass : function() {
         /*if ((classToAdd() != "") && (allClasses.indexOf(classToAdd) < 0)) // Prevent blanks and duplicates*/
-            classViewModel.allClasses.push(new classPeriod("",classToAdd));
+            classViewModel.allClasses.push(new classPeriod("",this.classToAdd));
             //classToAdd(""); // Clear the text box
             console.log(classViewModel.allClasses);
     },
   
-  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")]),
+  allClasses : ko.observableArray(),
   
   showClasses: ko.observable()
 
@@ -114,6 +114,9 @@ var classViewModel = {
 };
 
 ko.applyBindings(classViewModel);
+
+//sample objects
+/*[new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")] */
 
 </script>
 
