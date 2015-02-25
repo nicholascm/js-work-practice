@@ -38,7 +38,7 @@
               <h2><span data-bind="text: className"> </span></h2>
             </div>
             <div>
-      <button type="submit" data-bind="click: addStudent, visible: $root.showClasses">Add Student</button>
+      <button type="submit" data-bind="click: addStudent, visible: $root.showClasses, enable:studentToAdd().length>0">Add Student</button>
       <p><input type="text" placeholder="Student Name" data-bind="value: studentToAdd, visible: $root.showClasses"></p>
              </div>
               <!-- <input data-bind="value:studentToAdd"></input> -->
@@ -80,11 +80,11 @@ var classPeriod = function(students,className) {
   
   this.students=ko.observableArray(students);
   this.className=className;
-  this.studentToAdd="";
+  this.studentToAdd=ko.observable("");
   
   this.addStudent = function() {
-      this.students.push(this.studentToAdd);
-
+      this.students.push(this.studentToAdd());
+      this.studentToAdd(""); 
   }.bind(this);
   
 }
@@ -112,7 +112,6 @@ var classViewModel = {
         var chosenStudent=selectedClassPeriod.students[randomIndex];
       }); */
 };
-
 ko.applyBindings(classViewModel);
 
 //sample objects
