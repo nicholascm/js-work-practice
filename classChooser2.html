@@ -25,13 +25,14 @@
     
 
 <div class = "ui-content" role ="main">
-
-<p>Choose a Class
-<select data-bind="options:allClasses, optionsText:'className', optionsCaption:'Choose a class'"></select>
+<p1>Random Student: <span data-bind="text:classViewModel.chosenStudent"></span></p1>
+<p>Select a Class
+<select data-bind="options:allClasses, optionsText:'className', value: selectedClass, optionsCaption:'Select a class'"></select>
 </p>
+<button type = "submit" data-bind="click:chooseRandomStudent">Choose at Random</button>
 
 <p2>Classroom Setup</p2>
-<label><input data-bind='checked: showClasses' type='checkbox' /> Edit my classes and students</label>
+<label><input data-bind='checked: showClasses' type='checkbox' /> Edit Classes</label>
 
 <button type = "submit" data-bind='click:addClass,  visible: $root.showClasses'>Add a Class</button> <p><input type="text" placeholder="Class Name" data-bind="value: classToAdd,  visible: $root.showClasses" /></p>
     <ul data-bind="foreach: allClasses">
@@ -105,16 +106,22 @@ var classViewModel = {
             console.log(classViewModel.allClasses);
     },
   
-  allClasses : ko.observableArray(),
+  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")]),
   
-  showClasses: ko.observable()
+  showClasses: ko.observable(),
 
-    /*self.randomGenerator = ko.computed(function() {
-        var selectedClassPeriod = data.classArray[selector.selectedIndex];
-        var randomIndex = Math.floor((Math.random()*selectedClassPeriod.students.length));
-        var chosenStudent=selectedClassPeriod.students[randomIndex];
-      }); */
-};
+  selectedClass : ko.observable(),
+  
+  chooseRandomStudent : function() {
+     console.log(this.selectedClass());
+     var randomIndex=Math.floor((Math.random()*this.selectedClass().students().length));
+     console.log(randomIndex); //works
+     console.log(this.selectedClass().students()); //works
+     var chosenStudent=this.selectedClass().students()[randomIndex];
+     console.log(chosenStudent); //works
+    }
+  };
+
 ko.applyBindings(classViewModel);
 
 //sample objects
