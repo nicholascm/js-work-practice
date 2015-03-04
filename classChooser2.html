@@ -26,6 +26,7 @@
 
 <div class = "ui-content" role ="main">
 <p1>Random Student: <span data-bind="text:classViewModel.chosenStudent"></span></p1>
+<p1 id="chosenStudentName"></p1>
 <p>Select a Class
 <select data-bind="options:allClasses, optionsText:'className', value: selectedClass, optionsCaption:'Select a class'"></select>
 </p>
@@ -119,6 +120,7 @@ var classViewModel = {
      console.log(this.selectedClass().students()); //works
      var chosenStudent=this.selectedClass().students()[randomIndex];
      console.log(chosenStudent); //works
+     document.getElementById("chosenStudentName").innerHTML = chosenStudent;
     }
   };
 
