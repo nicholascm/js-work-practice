@@ -26,7 +26,7 @@
 
 <div class = "ui-content" role ="main">
 <p1>Random Student: <span data-bind="text:classViewModel.chosenStudent"></span></p1>
-<p1 id="chosenStudentName"></p1>
+<h2 id="chosenStudentName"></h2>
 <p>Select a Class
 <select data-bind="options:allClasses, optionsText:'className', value: selectedClass, optionsCaption:'Select a class'"></select>
 </p>
@@ -70,14 +70,16 @@ var retrieveFromLocalStorage = function() {
     console.log(data.classArray);
     view.renderClassChooserBox();
   }
-
-var saveToLocalStorage= function(classArray) { //okay this works!
-    var savedData = data.classArray;
-    for (var i in savedData)
-    localStorage.setItem("myData",JSON.stringify(savedData[i]));
-    console.log(localStorage.getItem("myData")); //saving an array of objects!!!
-  }
 */
+
+var saveToLocalStorage= function() { //okay this works!
+    var dataToSave = classViewModel.allClasses();
+    for (var i in dataToSave)
+       console.log(ko.toJSON(dataToSave[i]));
+       localStorage.setItem("myData"+i,ko.toJSON(dataToSave[i]));
+       //console.log(localStorage.getItem("myData"));
+  }
+
 
 //class constructor for each classPeriod
 
@@ -125,7 +127,7 @@ var classViewModel = {
   };
 
 ko.applyBindings(classViewModel);
-
+saveToLocalStorage(classViewModel.allClasses());
 //sample objects
 /*[new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")] */
 //comments
