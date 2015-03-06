@@ -20,7 +20,7 @@
     <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-icon-back ui-btn-icon-left ui-btn-icon-notext">Back</a>
     
    <!-- <a href="#" onclick ="retrieveFromLocalStorage()" class="ui-btn ui-corner-all ui-shadow ui-btn-icon-left ui-icon-gear">Load</a> -->
-  
+  <button type ="submit" data-bind="click:retrieveFromLocalStorage">Load Classes</button>
 </div>
     
 
@@ -34,7 +34,7 @@
 
 <p2>Classroom Setup</p2>
 <label><input data-bind='checked: showClasses' type='checkbox' /> Edit Classes</label>
-
+<button type = "submit" data-bind='click:saveToLocalStorage, visible: $root.showClasses'>Save</button>
 <button type = "submit" data-bind='click:addClass,  visible: $root.showClasses'>Add a Class</button> <p><input type="text" placeholder="Class Name" data-bind="value: classToAdd,  visible: $root.showClasses" /></p>
     <ul data-bind="foreach: allClasses">
         <li>
@@ -62,24 +62,26 @@
 
 //these two functions below are for local storage management, though they will only store/retrieve a single class.
 
-/*
+
 var retrieveFromLocalStorage = function() {
-    var myOldData = JSON.parse(localStorage.getItem("myData"));
-    data.classArray.push(myOldData); //pulling out an array of objects!
-    console.log(myOldData);
-    console.log(data.classArray);
-    view.renderClassChooserBox();
+  // for (i=0;i<2;i++) {
+      var myOldData = JSON.parse(localStorage.getItem(i));
+      console.log(myOldData); 
+      var newData=classViewModel.allClasses();
+      newData.push([new classPeriod(myOldData)]); 
+      console.log(newData); 
+   // }
   }
-*/
 
-var saveToLocalStorage= function() { //okay this works!
+
+var saveToLocalStorage= function() { 
     var dataToSave = classViewModel.allClasses();
-    for (var i in dataToSave)
+    for (var i in dataToSave) {
        console.log(ko.toJSON(dataToSave[i]));
-       localStorage.setItem("myData"+i,ko.toJSON(dataToSave[i]));
-       //console.log(localStorage.getItem("myData"));
+       localStorage.setItem(i,ko.toJSON(dataToSave[i]));
+         console.log(localStorage.getItem(i)); 
+     }
   }
-
 
 //class constructor for each classPeriod
 
@@ -107,9 +109,10 @@ var classViewModel = {
             classViewModel.allClasses.push(new classPeriod("",this.classToAdd));
             this.classToAdd("");
             console.log(classViewModel.allClasses);
+
     },
   
-  allClasses : ko.observableArray([new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")]),
+  allClasses : ko.observableArray(),
   
   showClasses: ko.observable(),
 
@@ -127,11 +130,10 @@ var classViewModel = {
   };
 
 ko.applyBindings(classViewModel);
-saveToLocalStorage(classViewModel.allClasses());
+
 //sample objects
 /*[new classPeriod(["Nick","John","Alex"],"First period"), new classPeriod(["Will","Cass","Antoine"],"Second Period"),new classPeriod(["Annie","Jeff","Jacob"],"Third period")] */
 //comments
-
 
 </script>
 
