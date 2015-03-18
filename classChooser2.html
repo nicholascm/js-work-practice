@@ -64,22 +64,20 @@
 
 
 var retrieveFromLocalStorage = function() {
-  // for (i=0;i<2;i++) {
+  for (i=0;i<7;i++) {
       var myOldData = JSON.parse(localStorage.getItem(i));
-      console.log(myOldData); 
-      var newData=classViewModel.allClasses();
-      newData.push([new classPeriod(myOldData)]); 
-      console.log(newData); 
-   // }
+      console.log(myOldData);
+      classViewModel.allClasses(myOldData);
+      }
   }
 
 
-var saveToLocalStorage= function() { 
+var saveToLocalStorage= function() {
     var dataToSave = classViewModel.allClasses();
     for (var i in dataToSave) {
        console.log(ko.toJSON(dataToSave[i]));
        localStorage.setItem(i,ko.toJSON(dataToSave[i]));
-         console.log(localStorage.getItem(i)); 
+       console.log(localStorage.getItem(i));
      }
   }
 
